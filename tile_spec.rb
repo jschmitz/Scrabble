@@ -72,11 +72,43 @@ class Board
   def score(points, row, column)
     score = 0
     points.each do |point|
-      score += @board[row, column].to_i * point
+      score += @board[row][column].to_i * point
       column += 1
     end
     score
   end
+  
+  def best_position(points, row)
+    best_position = 0
+    best_score = 0
+    for tile_placement in (0..spots_per_row(points)-1)
+      if score(points, row, tile_placement) > best_score
+        best_score = score(points, row, tile_placement)
+        best_position = tile_placement
+      end
+    end
+    best_position
+  end
+  
+  def best_row(points)
+    best_row = 0
+    best_score = 0
+    for rownum in (0..board.size-1) do
+      if score(points, rownum, best_position(points, rownum)) > best_score
+        best_row = rownum
+        best_score = score(points, rownum, best_position(points, rownum))
+      end
+    end
+    best_row
+  end
+  
+  def best_placement(points)
+    best_row = best_row(points)
+    best_position = best_position(points, best_row)
+    best_score = score(points, best_row, best_position)
+    {"row" => best_row, "column" => best_position, "score" => best_score}
+  end
+    
 end
 
 describe Tile do
@@ -97,7 +129,7 @@ end
 describe Board do
   let(:boardset) { ["1 1 1", "1 2 1", "1 1 3"] }
 
-  it "shoudl compact the board" do
+  it "should compact the board" do
     board = Board.new(boardset)
     board.board[0].should == "111"
   end
@@ -106,7 +138,6 @@ describe Board do
     board = Board.new(boardset)
     board.row_count.should == 3
     board.column_count.should == 3
-   #   board.
   end
 
   it "should know how many times a word can go in a row" do
@@ -120,6 +151,33 @@ describe Board do
     b = Board.new(boardset)
     tile_scores = [1,1,1]
     b.score(tile_scores, 0, 0).should == 3
+  end
+  
+  it "should place a word on 1,0 and calculate score with multiplier" do
+    b = Board.new(boardset)
+    tile_scores = [1,2,1]
+    b.score(tile_scores, 1, 0).should == 6
+  end
+  
+  it "should find the best place to place a word within a row" do
+    b = Board.new(boardset)
+    tile_scores = [3,1]
+    b.best_position(tile_scores, 1).should == 1
+  end
+  
+  it "should find the best row and score of all rows to place a word" do
+    b = Board.new(boardset)
+    tile_scores = [2,3]
+    b.best_row(tile_scores).should == 2
+  end
+  
+  it "should find the best place to put a word on a given board in one direction" do
+    b = Board.new(boardset)
+    tile_scores = [2,3]
+    final_result = b.best_placement(tile_scores)
+    final_result["row"].should == 2
+    final_result["column"].should == 1
+    final_result["score"].should == 11
   end
 end
 
