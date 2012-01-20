@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>
+[#8] Best Scrabble Opening
+- PuzzleNode
+</title>
+<meta content="width=1050" name="viewport">
+<link href="14_files/application-10994cc4b2cb85acdf0006418bb983b1.css" media="screen" rel="stylesheet" type="text/css">
+<script src="14_files/ga.js" async="" type="text/javascript"></script><script src="14_files/application-637d544d1b01412b89be2543d0c96ccb.js" type="text/javascript"></script>
+<meta content="authenticity_token" name="csrf-param">
+<meta content="hCMu3W7vJAfaasotSQIcqckkPpDOBRFteY2AHJ4zHeQ=" name="csrf-token">
+
+</head>
+<body>
+<div id="flash">
+</div>
+
+<a href="http://github.com/mendicant-university/puzzlenode/">
+<img alt="Fork me on Github" src="14_files/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f676974687562.png" style="position: absolute; top: 0pt; right: 0pt; border: 0pt none; z-index: 100;">
+</a>
+
+<header>
+<div class="wrap">
+<div id="logo">
+<h1><a href="http://puzzlenode.com/">Puzzle Node</a></h1>
+<img alt="Loading" class="loading" src="14_files/loading-ab5f84e849f5bb2aea2be3d3da1300ed.gif">
+</div>
+</div>
+<nav>
+<div class="wrap"><ul>
+<li><a href="http://puzzlenode.com/puzzles">Puzzles</a></li>
+<li class="node"></li>
+<li><a href="http://puzzlenode.com/leaderboard">Leaderboard</a></li>
+<li class="node"></li>
+<li><a href="http://puzzlenode.com/announcements">Announcements</a></li>
+<li class="node"></li>
+<li><a href="#" onclick="PuzzleNode.about(); return false;">About</a></li>
+<li class="right">
+<a href="http://puzzlenode.com/login" id="login">Log in</a>
+</li>
+
+</ul>
+<div class="clear"></div>
+</div>
+</nav>
+</header>
+<div id="content">
+<div class="wrap"><div id="puzzle">
+<h1>[#8] Best Scrabble Opening</h1>
+<div class="puzzle-info">
+<span class="section">
+This puzzle was contributed by
+<a href="https://github.com/afcapel" target="_blank">Alberto Fernández-Capel</a>
+and published on
+May 15, 2011
+</span>
+<span class="right">
+<button class="clean-gray small" data-url="/puzzles/14/submissions/new">
+Submit your solution
+</button>
+
+</span>
+</div>
+
+<div id="description">
+<h1>Best Scrabble Opening</h1>
+
+<p>In this puzzle you will try to find the best first move in a Scrabble-like game. You will be given:</p>
+
+<ul>
+<li>A set of lettered tiles. Each tile have a letter and a value. If two tiles have the same letter, they will have the same value.</li>
+<li>A dictionary of the words you can use. Be careful, because not all 
+the words in the dictionary will be compatible with your tiles.</li>
+<li>A board divided into squares. Each square will have an associated multiplication factor.</li>
+</ul>
+
+<p>You can form words anywhere you want on the board, but they should 
+read from left to right or from top to bottom. When forming a word, your
+ points are calculated by multiplying the value of each letter by the 
+value of the square in the board.</p>
+
+<h2>Problem</h2>
+
+<p>Your task is to find the best opening word and its position on the board.</p>
+
+<h2>Example</h2>
+
+<h3>Input</h3>
+
+<p>Given the following scrabble.json input file:</p>
+
+<pre>{
+  "board": [
+      "1 1 1 1 1 1 1 1 1 1 1 1",
+      "1 1 1 2 1 2 1 1 1 1 1 1",
+      "1 2 1 1 1 3 1 1 1 1 2 1",
+      "2 1 1 1 1 1 1 1 1 2 2 1",
+      "1 1 1 2 1 1 1 1 1 1 1 1",
+      "1 1 1 1 1 1 2 1 1 1 2 1",
+      "1 1 1 1 1 1 1 1 2 1 1 1",
+      "1 1 1 1 1 1 1 1 1 1 1 2",
+      "1 1 1 1 1 1 1 1 1 1 1 1"
+  ],
+  "dictionary": [
+    "gyre",
+    "gimble",
+    "wabe",
+    "mimsy",
+    "borogoves",
+    "raths",
+    "outgrabe",
+    "jabberwock",
+    "jubjub",
+    "shun",
+    "frumious",
+    "bandersnatch",
+    "vorpal",
+    "manxome",
+    "foe",
+    "tumtum",
+    "uffish",
+    "whiffling",
+    "tulgey",
+    "burbled",
+    "galumphing",
+    "frabjous",
+    "callooh",
+    "callay",
+    "chortled",
+    "brillig",
+    "slithy",
+    "toves",
+    "gyre",
+    "gimble",
+    "mome"
+  ],
+  "tiles": [
+    "i4",
+    "w5",
+    "g6",
+    "f7",
+    "s2",
+    "e1",
+    "l3",
+    "h8",
+    "n1",
+    "f7",
+    "b8",
+    "r12",
+    "u3",
+    "g6",
+    "i4",
+    "q9",
+    "o3",
+    "d2",
+    "s2",
+    "f7"
+  ]
+}
+</pre>
+
+<h3>Output</h3>
+
+<p>Your program should find the opening move that generates the most 
+points. The output should be the board with the letters placed in the 
+appropriate position, like this:</p>
+
+<pre>1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 2 1 2 1 1 1 1 1 1
+1 2 w h i f f l i n g 1
+2 1 1 1 1 1 1 1 1 2 2 1
+1 1 1 2 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 2 1 1 1 2 1
+1 1 1 1 1 1 1 1 2 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 2
+1 1 1 1 1 1 1 1 1 1 1 1
+</pre>
+
+<h2>Files</h2>
+<div id="files">
+<a href="http://puzzlenode.com/puzzles/14/attachments/EXAMPLE_INPUT.json" target="_blank"><img alt="File_small" src="14_files/file_small-621f5242e52f6ea987575c5116ad21fc.png">EXAMPLE_INPUT.json</a>
+<a href="http://puzzlenode.com/puzzles/14/attachments/INPUT.json" target="_blank"><img alt="File_small" src="14_files/file_small-621f5242e52f6ea987575c5116ad21fc.png">INPUT.json</a>
+<a href="http://puzzlenode.com/puzzles/14/attachments/EXAMPLE_OUTPUT.txt" target="_blank"><img alt="File_small" src="14_files/file_small-621f5242e52f6ea987575c5116ad21fc.png">EXAMPLE_OUTPUT.txt</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div class="wrap">
+<div id="about">
+<p>
+PuzzleNode is a site for coders who enjoy to work on challenging problems,
+and is inspired by similar efforts such as
+<a href="http://projecteuler.net/">Project Euler</a>
+and the
+<a href="http://ipsc.ksp.sk/">Internet Problem Solving Contest</a>
+. It also serves as an entrance exam
+of sorts for folks looking to join
+<a href="http://mendicantuniversity.org/">Mendicant University.</a>
+</p>
+<p>
+This project is developed, maintained, and supported by Mendicant
+University students and staff. If you have questions, think you've found a
+bug, or run into issues with our puzzles, please send an email to
+puzzlenode@gmail.com. Alternatively, you can look for seacreature,
+tehviking, or jordanbyron in the #mendicant channel on Freenode.
+Finally, if you post your (non-spoiler) comments on twitter using the
+hashtag #puzzlenode, it will reach us.
+</p>
+<p>
+Happy hacking!
+<a class="close" href="#" onclick="PuzzleNode.about(); return false;">Return to top</a>
+</p>
+</div>
+<div class="teaser">
+<a href="#" onclick="PuzzleNode.about(); return false;">PuzzleNode is a site for coders who enjoy to work on challenging problems ...</a>
+</div>
+<div class="bottom">
+<a href="http://mendicantuniversity.org/"><div id="mendicant-logo"></div>
+</a></div>
+</div>
+<script>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15397397-5']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+
+</div>
+
+
+</body></html>
