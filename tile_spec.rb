@@ -1,115 +1,7 @@
-class Tile 
-
-  def initialize(tile)
-    @tile = tile
-  end
-
-  def letter
-    @tile[0]
-  end
-
-  def score
-    @tile[1].to_i
-  end
-end
-
-class Dictionary
-  attr_reader :words
-  def initialize(words)
-    @words = words
-  end
-
-  def matches(tileset)
-    word_matches = []
-    words.each do |word|
-      word_matches << word if Dictionary.match?(tileset, word)      
-    end
-    return word_matches
-  end
-
-  def self.match?(tiles, word)
-      match = false
-      word.each_char do |ch|
-        index = tiles.index ch
-        return unless index
-        tiles = Dictionary.remove_letter(tiles, ch)
-      end
-      tiles.empty?
-  end
-
-  def self.remove_letter(word, letter)
-    word_arr = word.split(//)
-    index = word_arr.index letter
-    word_arr.delete_at index unless index.nil?
-    return word_arr.join
-  end
-
-end
-
-class Board
-
-  attr_accessor :board
-
-  def initialize(board)
-    @board = board
-    for rownum in (0..board.size-1) do
-      @board[rownum] = @board[rownum].gsub(" ","")
-    end
-  end
-
-  def row_count
-    @board.size
-  end
-
-  def column_count
-    @board[0].gsub(" ", "").size
-  end
-
-  def spots_per_row(word)
-    column_count - word.size + 1
-  end
-
-  def score(points, row, column)
-    score = 0
-    points.each do |point|
-      score += @board[row][column].to_i * point
-      column += 1
-    end
-    score
-  end
-  
-  def best_position(points, row)
-    best_position = 0
-    best_score = 0
-    for tile_placement in (0..spots_per_row(points)-1)
-      if score(points, row, tile_placement) > best_score
-        best_score = score(points, row, tile_placement)
-        best_position = tile_placement
-      end
-    end
-    best_position
-  end
-  
-  def best_row(points)
-    best_row = 0
-    best_score = 0
-    for rownum in (0..board.size-1) do
-      if score(points, rownum, best_position(points, rownum)) > best_score
-        best_row = rownum
-        best_score = score(points, rownum, best_position(points, rownum))
-      end
-    end
-    best_row
-  end
-  
-  def best_placement(points)
-    best_row = best_row(points)
-    best_position = best_position(points, best_row)
-    best_score = score(points, best_row, best_position)
-    {"row" => best_row, "column" => best_position, "score" => best_score}
-  end
-    
-end
+require_relative 'sc_tile'
+require_relative 'sc_board'
+require_relative 'sc_dictionary'
+require_relative 'sc_tilerack'
 
 describe Tile do
 
@@ -179,6 +71,71 @@ describe Board do
     final_result["column"].should == 1
     final_result["score"].should == 11
   end
+  
+  it "should find the best word on a given board in one direction" do
+    b = Board.new(boardset)
+    tile_scores_set = []
+    tile_scores_set << [1,1]
+    tile_scores_set << [2,3]
+    final_result = b.best_word(tile_scores_set)
+    final_result["word"].should == 1
+    final_result["row"].should == 2
+    final_result["column"].should == 1
+    final_result["score"].should == 11
+  end
+  
+  it "should respond to the is_rotated? method" do
+    b = Board.new(boardset)
+    b.is_rotated?.should == false
+  end
+  
+  it "should rotate the board" do
+    b = Board.new(["1 2 3", "4 5 6", "7 8 9"])
+    b.rotate!
+    b.is_rotated?.should == true
+    b.board[0].should == "369"
+    b.board[1].should == "258"
+    b.board[2].should == "147"
+  end
+  
+  it "should rotate the board back correctly" do
+    b = Board.new(["1 2 3", "4 5 6", "7 8 9"])
+    b.rotate!
+    b.rotate!
+    b.is_rotated?.should == false
+    b.board[0].should == "123"
+    b.board[1].should == "456"
+    b.board[2].should == "789"
+  end
+
+  it "should find the best word on a given board in either direction" do
+    b = Board.new(["1 1 1","1 2 1","1 9 3"])
+    tile_scores_set = []
+    tile_scores_set << [1,1]
+    tile_scores_set << [2,3]
+    final_result = b.board_answer(tile_scores_set)
+    final_result["word"].should == 1
+    final_result["row"].should == 1
+    final_result["column"].should == 1
+    final_result["score"].should == 31
+    final_result["rotated"].should == true
+  end
+  
+  it "should place the best word on the board" do
+    b = Board.new(["1 1 1","1 2 1","1 9 3"])
+    tile_scores_set = []
+    tile_scores_set << [1,1]
+    tile_scores_set << [2,3]
+    words = []
+    words << "no"
+    words << "ya"
+    final_result = b.board_answer(tile_scores_set)
+    b.place_on_board(words[final_result["word"]], final_result["row"], final_result["column"], final_result["rotated"])
+    b.best_board[0].should == "111"
+    b.best_board[1].should == "1y1"
+    b.best_board[2].should == "1a3"
+  end
+
 end
 
 describe Dictionary do
@@ -221,4 +178,20 @@ describe Dictionary do
     letter = "n"
     Dictionary.remove_letter(word, letter).should == "oe"
   end
+end
+
+describe Tilerack do
+  let(:tile_input) { ["f5","o1","n2","e3"] }
+  let(:dictionary_input) { ["one", "fon"] }
+  
+  it "should get the tile values for a given word" do
+    tilerack = Tilerack.new(tile_input)
+    tilerack.values_for_word("one").should == "123"
+  end
+  
+  it "should get the tile values for all given words" do
+    tilerack = Tilerack.new(tile_input)
+    tilerack.values_for_words(dictionary_input).should == ["123","512"]
+  end
+  
 end
