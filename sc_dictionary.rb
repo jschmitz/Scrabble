@@ -19,7 +19,8 @@ class Dictionary
         return unless index
         tiles = Dictionary.remove_letter(tiles, ch)
       end
-      tiles.empty?
+      # if you get through without finding a letter missing, then it's there
+      true
   end
 
   def self.remove_letter(word, letter)

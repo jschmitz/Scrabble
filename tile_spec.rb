@@ -136,6 +136,20 @@ describe Board do
     b.best_board[2].should == "1a3"
   end
 
+  xit "should format the best board correctly" do
+    b = Board.new(["1 1 1","1 2 1","1 9 3"])
+    tile_scores_set = []
+    tile_scores_set << [1,1]
+    tile_scores_set << [2,3]
+    words = []
+    words << "no"
+    words << "ya"
+    final_result = b.board_answer(tile_scores_set)
+    b.place_on_board(words[final_result["word"]], final_result["row"], final_result["column"], final_result["rotated"])
+    b.best_board_output[0].should == "111"
+    b.best_board_output[1].should == "1y1"
+    b.best_board_output[2].should == "1a3"
+  end
 end
 
 describe Dictionary do
@@ -192,6 +206,11 @@ describe Tilerack do
   it "should get the tile values for all given words" do
     tilerack = Tilerack.new(tile_input)
     tilerack.values_for_words(dictionary_input).should == ["123","512"]
+  end
+  
+  it "should provide a string of all tiles" do
+    tilerack = Tilerack.new(tile_input)
+    tilerack.letters.should == "fone"
   end
   
 end
