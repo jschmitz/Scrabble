@@ -26,6 +26,14 @@ class Board
 
   def score(points, row, column)
     score = 0
+    temp_array = []
+    if points.class.name.split("::").last == "String"
+      temp_array = points.split(//)
+      for i in (0..temp_array.size-1) do
+        temp_array[i] = temp_array[i].to_i
+      end
+      points = temp_array
+    end
     points.each do |point|
       score += @board[row][column].to_i * point
       column += 1
@@ -134,4 +142,12 @@ class Board
     @best_board
   end
   
+  def formatted_best_word
+    best_formatted_board = []
+    @best_board.each do |row|
+      temp_row = row.split(//)
+      best_formatted_board << temp_row.join(" ")
+    end
+    best_formatted_board 
+  end
 end
